@@ -1,73 +1,42 @@
-﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
-using QR.Core.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using System.Windows.Threading;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
+using QR.Core.Models;
 using Toolkits.Media;
 
 namespace QR.ViewModels;
 
-public class CellViewModel: ObservableObject
+public class CellViewModel : ObservableObject
 {
-    #region 初始化
+    public CellViewModel(MetaWord word,WordProperty proterty)
+    {
+        Meta = word;
+        MetaProperty = proterty;
+
+        timer = new DispatcherTimer(DispatcherPriority.Render)
+        {
+            Interval = TimeSpan.FromSeconds(SwitchInterval)
+        };
+
+        timer.Tick += (s, e) => 
+        {
+            ShowFront();
+            timer.Stop();
+        };
+    }
+
+
     DispatcherTimer timer;
 
     /// <summary>
     /// 单词切换之后还原需要的间隔
     /// <para>单位秒</para>
     /// </summary>
-    public double Interval { get; set; } = 2;
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="meta">单词对象</param>
-    /// <param name="property">参数对象</param>
-    public CellViewModel(MetaWord meta, WordProperty property)
-    {
-        Meta = meta;
-        MetaProperty = property;
-
-        timer = new DispatcherTimer(DispatcherPriority.Render)
-        {
-            Interval = TimeSpan.FromSeconds(Interval)
-        };
-
-        timer.Tick += ShowTimerTick;
-    }
-
-
-    /// <summary>
-    /// 定时还原切换过的显示内容
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void ShowTimerTick(object? sender, EventArgs e)
-    {
-        ShowFront();
-        timer.Stop();
-    }
-    #endregion
-
-    #region 通知属性
-
-    private string _show = "";
-
-    /// <summary>
-    /// 当前界面渲染的内容
-    /// </summary>
-    public string Show
-    {
-        get => _show;
-        set => SetProperty(ref _show, value);
-    }
-    #endregion
-
-    #region 属性
+    public double SwitchInterval { get; set; } = 2;
 
     /// <summary>
     /// 数据对象
@@ -104,9 +73,16 @@ public class CellViewModel: ObservableObject
     /// </summary>
     protected string MetaInfo { get => string.Join(" ", Word, Interpretioin); }
 
-    #endregion
+    private string _show = "";
 
-    #region 方法
+    /// <summary>
+    /// 当前界面渲染的内容
+    /// </summary>
+    public string Show
+    {
+        get => _show;
+        set => SetProperty(ref _show, value);
+    }
 
     /// <summary>
     /// 显示正面信息
@@ -191,24 +167,19 @@ public class CellViewModel: ObservableObject
         }
     }
 
-
     /// <summary>
     /// 恢复初始状态
     /// </summary>
-    public void Stop()
+    public void Reset()
     {
         timer?.Stop();
         ShowFront();
     }
 
-    #endregion
-
-    #region 动作
     /// <summary>
-    /// 单击切换中英文
-    /// Interval之后自动回默认结果
+    /// 翻个面瞅一下
     /// </summary>
-    public void LeftButtonClick()
+    public void Glance()
     {
         if (!timer.IsEnabled)
         {
@@ -221,26 +192,6 @@ public class CellViewModel: ObservableObject
             timer.Stop();
         }
     }
-
-    /// <summary>
-    /// 朗读单词
-    /// </summary>
-    public void RightButtonClick()
-        => Speak();
-
-    /// <summary>
-    /// 编辑当前内容
-    /// </summary>
-    public void MiddleButtonClick()
-    {
-        if (Keyboard.IsKeyDown(Key.LeftCtrl))
-        {
-            //EditorViewModel vm = new(this.Meta);
-            //Views.EditorWindow editor = new(vm);
-            //editor.ShowDialog();
-        }
-    }
-    #endregion
 
     public override string ToString() => Meta.ToString();
 }

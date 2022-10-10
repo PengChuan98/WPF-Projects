@@ -68,7 +68,6 @@ public static class DialogService
         }
         catch (Exception e)
         {
-
             throw new Exception(e.Message, e);
         }
 

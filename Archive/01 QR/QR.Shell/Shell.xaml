@@ -7,12 +7,15 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:QR.Shell"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:view="clr-namespace:QR.Shell.Views"
+    xmlns:viewsAttach="clr-namespace:QR.Shell.Controls.ViewsAttach"
     xmlns:vm="clr-namespace:QR.ViewModels;assembly=QR.ViewModels"
     Name="window"
     Title="QR"
     Width="600"
-    Height="200"
+    Height="500"
     Topmost="True"
+    WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
     <Window.Resources>
         <Style BasedOn="{StaticResource MenuDefault}" TargetType="Menu" />
@@ -62,7 +65,10 @@
                             Header="打开为Words文件" />
                     </MenuItem>
                 </MenuItem>
+
+                <MenuItem Command="{Binding TestCommand}" Header="测试" />
             </Menu>
+
         </Grid>
 
 
@@ -77,10 +83,13 @@
             </Grid.RowDefinitions>
 
             <!--  面板  -->
-            <Grid
+            <view:CellView
                 x:Name="panel"
                 Grid.Row="0"
-                Margin="5" />
+                Margin="5"
+                viewsAttach:CellViewAttach.CellFontSize="500"
+                viewsAttach:CellViewAttach.CellStretch="Uniform"
+                DataContext="{Binding CellVM}" />
 
             <!--  信息栏  -->
             <Label

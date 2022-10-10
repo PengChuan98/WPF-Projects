@@ -17,11 +17,17 @@ public class MenuViewModel
     public RelayCommand<string?> OpenDialogCommand { get; set; }
 
     public void OpenDialogSender(string? msg) =>
-        Manager.SendString(msg, Manager.TOpenFileDialog);
+        MessengerHelper.SendString(msg, MessengerHelper.TOpenFileDialog);
+
+    public RelayCommand TestCommand { get; set; }
+
+    public void RunTest()
+        => MessengerHelper.SendEmptyString(MessengerHelper.TTestCommand);
 
     public MenuViewModel()
     {
         OpenDialogCommand = new(OpenDialogSender);
+        TestCommand = new(RunTest);
     }
 
 

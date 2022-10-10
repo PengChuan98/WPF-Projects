@@ -3,7 +3,7 @@
 /// <summary>
 /// 面板参数映射
 /// </summary>
-public class PanelProperty
+public class GridProperty
 {
     /// <summary>
     /// 单词行数
