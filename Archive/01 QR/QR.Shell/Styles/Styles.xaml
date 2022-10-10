@@ -1,0 +1,16 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/QR.Shell;component/Styles/Button.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/QR.Shell;component/Styles/Label.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/QR.Shell;component/Styles/ToggleButton.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/QR.Shell;component/Styles/RadioButton.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/QR.Shell;component/Styles/Slider.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/QR.Shell;component/Styles/Menu.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/QR.Shell;component/Styles/MenuItem.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/QR.Shell;component/Styles/Window.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+
+
+</ResourceDictionary>
