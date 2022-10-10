@@ -83,13 +83,12 @@
             </Grid.RowDefinitions>
 
             <!--  面板  -->
-            <view:CellView
+            <view:GridView
                 x:Name="panel"
                 Grid.Row="0"
                 Margin="5"
-                viewsAttach:CellViewAttach.CellFontSize="500"
-                viewsAttach:CellViewAttach.CellStretch="Uniform"
-                DataContext="{Binding CellVM}" />
+                viewsAttach:CellViewAttach.CellFontSize="16"
+                viewsAttach:CellViewAttach.CellStretch="None" />
 
             <!--  信息栏  -->
             <Label

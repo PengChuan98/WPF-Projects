@@ -36,13 +36,13 @@
     </UserControl.Style>
 
 
-    <Viewbox Stretch="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=(viewsAttach:CellViewAttach.CellStretch)}">
+    <Viewbox Stretch="{Binding RelativeSource={RelativeSource AncestorType=local:CellView}, Path=(viewsAttach:CellViewAttach.CellStretch)}">
         <TextBlock
             Width="{Binding ElementName=parent, Path=ActualWidth}"
             MaxWidth="{Binding ElementName=parent, Path=ActualWidth}"
             Background="{Binding ElementName=parent, Path=Background}"
             FontFamily="{Binding ElementName=parent, Path=FontFamily}"
-            FontSize="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=(viewsAttach:CellViewAttach.CellFontSize)}"
+            FontSize="{Binding RelativeSource={RelativeSource AncestorType=local:CellView}, Path=(viewsAttach:CellViewAttach.CellFontSize)}"
             Foreground="{Binding ElementName=parent, Path=Foreground}"
             Text="{Binding Show}"
             TextAlignment="Center"

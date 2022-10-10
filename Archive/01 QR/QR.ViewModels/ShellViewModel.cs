@@ -7,12 +7,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Toolkits.Helpers;
 
 namespace QR.ViewModels;
 
 public class ShellViewModel : ObservableObject
 {
-    List<MetaWord> Words = new();
+    List<MetaWord> MetaWordCollection = new();
+    public List<CellViewModel>? CellViewModelCollection { get; set; }
 
     #region 通知属性
     private string _log = "";
@@ -22,11 +24,15 @@ public class ShellViewModel : ObservableObject
         set => SetProperty(ref _log, value);
     }
 
-    private CellViewModel _cellviewmodel;
-    public CellViewModel CellVM
+    private List<CellViewModel> _itemCollection = new();
+
+    /// <summary>
+    /// 显示用的视图模型集合
+    /// </summary>
+    public List<CellViewModel> ItemCollection
     {
-        get => _cellviewmodel;
-        set => SetProperty(ref _cellviewmodel, value);
+        get => _itemCollection;
+        set => SetProperty(ref _itemCollection, value);
     }
 
     #endregion
@@ -44,9 +50,9 @@ public class ShellViewModel : ObservableObject
                     MessengerHelper.SendString("CSV文件打开失败", MessengerHelper.TErrorLog);
                 }
 
-                if (FileService.ReadStringFile(path, out string content) && WordService.FromCSV(content, out Words))
+                if (FileService.ReadStringFile(path, out string content) && WordService.FromCSV(content, out MetaWordCollection))
                 {
-                    MessengerHelper.SendString(string.Format("加载了{0}个单词 . 加载地址 : {1}", Words.Count, path), MessengerHelper.TInfoLog);
+                    MessengerHelper.SendString(string.Format("加载了{0}个单词 . 加载地址 : {1}", MetaWordCollection.Count, path), MessengerHelper.TInfoLog);
                 }
 
             }
@@ -58,9 +64,9 @@ public class ShellViewModel : ObservableObject
                     MessengerHelper.SendString("Words文件打开失败", MessengerHelper.TErrorLog);
                 }
 
-                if (FileService.ReadByteFile(path, out var content) && WordService.FromBytes(content, out Words))
+                if (FileService.ReadByteFile(path, out var content) && WordService.FromBytes(content, out MetaWordCollection))
                 {
-                    MessengerHelper.SendString(string.Format("加载了{0}个单词 . 加载地址 : {1}", Words.Count, path), MessengerHelper.TInfoLog);
+                    MessengerHelper.SendString(string.Format("加载了{0}个单词 . 加载地址 : {1}", MetaWordCollection.Count, path), MessengerHelper.TInfoLog);
                 }
             }
             else
@@ -96,13 +102,26 @@ public class ShellViewModel : ObservableObject
         MessengerHelper.RegisterString(this, MessengerHelper.TTestCommand, Test);
     }
 
-    private int index = 0;
+    private int index = 1;
     private void Test(object recipient, string message)
     {
-        var word = Words[index];
-        CellVM = new(word, new());
-        CellVM.Reset();
-        index++;
+        var property = new WordProperty();
+        CellViewModelCollection = new();
+        MetaWordCollection.ForEach(
+            item => { CellViewModelCollection.Add(new(item, property)); }
+            );
+
+        var items = ListHelper<CellViewModel>.Split(CellViewModelCollection, 10 * 10, index);
+
+        items.Sort((x, y) =>
+        {
+            string src = x.Meta.Word.ToLower();
+            string dst = y.Meta.Word.ToLower();
+            return src.CompareTo(dst);
+        });
+
+
+        ItemCollection = items;
     }
 
     /// <summary>
@@ -110,7 +129,7 @@ public class ShellViewModel : ObservableObject
     /// </summary>
     public void CommandInitialized()
     {
-
+        
     }
 
 

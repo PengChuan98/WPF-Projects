@@ -12,25 +12,17 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using QR.ViewModels;
 
 namespace QR.Shell.Views
 {
     /// <summary>
-    /// CellView.xaml 的交互逻辑
+    /// GridView.xaml 的交互逻辑
     /// </summary>
-    public partial class CellView : UserControl
+    public partial class GridView : UserControl
     {
-        public CellView()
+        public GridView()
         {
             InitializeComponent();
-            this.DataContextChanged += (s, e) => ((CellViewModel)DataContext)?.Reset();
         }
-
-        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
-            => ((CellViewModel)DataContext)?.Glance();
-
-        protected override void OnMouseRightButtonDown(MouseButtonEventArgs e)
-            => ((CellViewModel)DataContext)?.Speak();
     }
 }
