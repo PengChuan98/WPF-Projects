@@ -2,50 +2,92 @@
     x:Class="QR.Shell.Shell"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:attach="clr-namespace:QR.Shell.Controls.Attach"
+    xmlns:convert="clr-namespace:QR.Shell.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:QR.Shell"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:QR.ViewModels;assembly=QR.ViewModels"
+    Name="window"
     Title="QR"
     Width="600"
     Height="200"
     Topmost="True"
     mc:Ignorable="d">
-    <StackPanel Margin="5">
-        <Menu Style="{StaticResource MenuDefault}">
-            <MenuItem Header="测试" Style="{StaticResource MenuItemDefault}">
-                <MenuItem Header="测试" Style="{StaticResource MenuItemDefault}" />
-                <MenuItem Header="测试" Style="{StaticResource MenuItemDefault}" />
-                <MenuItem Header="测试" Style="{StaticResource MenuItemDefault}" />
-                <MenuItem Header="测试" Style="{StaticResource MenuItemDefault}" />
-                <MenuItem Header="测试" Style="{StaticResource MenuItemDefault}">
-                    <MenuItem Header="测试" Style="{StaticResource MenuItemDefault}" />
-                    <MenuItem Header="测试" Style="{StaticResource MenuItemDefault}" />
-                    <MenuItem Header="测试" Style="{StaticResource MenuItemDefault}" />
-                    <MenuItem Header="测试" Style="{StaticResource MenuItemDefault}" />
-                </MenuItem>
-            </MenuItem>
-            <MenuItem Header="测试" Style="{StaticResource MenuItemDefault}" />
-            <MenuItem Header="测试" Style="{StaticResource MenuItemDefault}" />
-            <MenuItem Header="测试" Style="{StaticResource MenuItemDefault}">
-                <MenuItem Header="测试" Style="{StaticResource MenuItemDefault}">
-                    <MenuItem Header="测试" Style="{StaticResource MenuItemDefault}" />
-                    <MenuItem Header="测试" Style="{StaticResource MenuItemDefault}" />
-                    <MenuItem Header="测试" Style="{StaticResource MenuItemDefault}" />
-                    <MenuItem Header="测试" Style="{StaticResource MenuItemDefault}" />
-                    <MenuItem Header="测试" Style="{StaticResource MenuItemDefault}">
-                        <MenuItem Header="测试" Style="{StaticResource MenuItemDefault}" />
-                        <MenuItem Header="测试" Style="{StaticResource MenuItemDefault}" />
-                        <MenuItem Header="测试" Style="{StaticResource MenuItemDefault}" />
-                        <MenuItem Header="测试" Style="{StaticResource MenuItemDefault}" />
+    <Window.Resources>
+        <Style BasedOn="{StaticResource MenuDefault}" TargetType="Menu" />
+        <Style BasedOn="{StaticResource MenuItemDefault}" TargetType="MenuItem" />
+
+        <!--  上下文  -->
+        <vm:ShellViewModel x:Key="shellViewModel" />
+        <vm:MenuViewModel x:Key="menuViewModel" />
+    </Window.Resources>
+
+    <DockPanel DataContext="{StaticResource shellViewModel}">
+        <!--  标题栏  -->
+        <Grid
+            Height="32"
+            DockPanel.Dock="Top"
+            WindowChrome.IsHitTestVisibleInChrome="True">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Label
+                Grid.Column="0"
+                Margin="5,0,2,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                attach:WindowAttach.IsDragElement="True"
+                Content="{Binding ElementName=window, Path=Title}"
+                FontSize="14"
+                FontWeight="Bold"
+                Foreground="{DynamicResource WindowTitleColor}" />
+
+
+            <Menu
+                x:Name="menu"
+                Grid.Column="1"
+                DataContext="{StaticResource menuViewModel}">
+                <MenuItem Header="文件">
+                    <MenuItem Header="打开">
+                        <MenuItem
+                            Command="{Binding OpenDialogCommand}"
+                            CommandParameter="CSV"
+                            Header="打开为CSV文件" />
+                        <MenuItem
+                            Command="{Binding OpenDialogCommand}"
+                            CommandParameter="WORDS"
+                            Header="打开为Words文件" />
                     </MenuItem>
                 </MenuItem>
-            </MenuItem>
-            <MenuItem Header="测试" Style="{StaticResource MenuItemDefault}" />
-            <MenuItem
-                Header="测试"
-                IsEnabled="False"
-                Style="{StaticResource MenuItemDefault}" />
-        </Menu>
+            </Menu>
+        </Grid>
 
-    </StackPanel>
+
+        <!--  功能栏  -->
+        <Grid
+            Margin="1"
+            Background="#ffffff"
+            DockPanel.Dock="Bottom">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!--  面板  -->
+            <Grid
+                x:Name="panel"
+                Grid.Row="0"
+                Margin="5" />
+
+            <!--  信息栏  -->
+            <Label
+                Grid.Row="1"
+                Height="26"
+                Background="#eeeef2"
+                Content="{Binding ShellLog}" />
+        </Grid>
+    </DockPanel>
 </Window>
