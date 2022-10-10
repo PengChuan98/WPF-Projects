@@ -19,6 +19,11 @@ public class MenuViewModel
     public void OpenDialogSender(string? msg) =>
         MessengerHelper.SendString(msg, MessengerHelper.TOpenFileDialog);
 
+    public RelayCommand<string?> SaveDialogCommand { get; set; }
+
+    public void SaveDialogSender(string? msg) =>
+        MessengerHelper.SendString(msg, MessengerHelper.TSaveFileDialog);
+
     public RelayCommand TestCommand { get; set; }
 
     public void RunTest()
@@ -27,6 +32,7 @@ public class MenuViewModel
     public MenuViewModel()
     {
         OpenDialogCommand = new(OpenDialogSender);
+        SaveDialogCommand = new(SaveDialogSender);
         TestCommand = new(RunTest);
     }
 

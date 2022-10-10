@@ -14,6 +14,7 @@ public static class MessengerHelper
 
     // 文件打开(窗口)令牌
     public readonly static string TOpenFileDialog = "SOpenFileDialog";
+    public readonly static string TSaveFileDialog = "SSaveFileDialog";
 
     // CellViewModel
     public readonly static string TCellFontSize = "DCellFontSize";

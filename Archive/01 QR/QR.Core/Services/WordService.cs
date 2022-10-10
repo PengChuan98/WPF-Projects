@@ -120,7 +120,7 @@ public static class WordService
     /// <param name="collection">数据集</param>
     /// <param name="content">二进制内容</param>
     /// <returns></returns>
-    public static void ToBytes(List<MetaWord> collection, out byte[] content)
+    public static bool ToBytes(List<MetaWord> collection, out byte[] content)
     {
         content = Helper.ValueHelper.EmptyBytes;
         // 序列化为字符串 -> 字符串转成二进制文件 -> 压缩二进制文件
@@ -138,5 +138,7 @@ public static class WordService
         {
             throw new Exception(e.Message, e);
         }
+
+        return true;
     }
 }

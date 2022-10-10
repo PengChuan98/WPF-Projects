@@ -13,7 +13,10 @@ namespace QR.ViewModels;
 
 public class ShellViewModel : ObservableObject
 {
+    string LastPath = QR.Core.Helper.ValueHelper.EmptyString;
+
     List<MetaWord> MetaWordCollection = new();
+
     public List<CellViewModel>? CellViewModelCollection { get; set; }
 
     #region 通知属性
@@ -40,45 +43,17 @@ public class ShellViewModel : ObservableObject
     #region 消息方法
     public void OpenFileWithDialog(object s, string e)
     {
-        try
-        {
-            if (e.ToLower() == "csv")
-            {
-                var recall = DialogService.OpenFileDlg(DialogService.FilterBuilder("csv", true), out string path);
-                if (!recall)
-                {
-                    MessengerHelper.SendString("CSV文件打开失败", MessengerHelper.TErrorLog);
-                }
+        if (e.ToLower() == "csv") Handles.FileHandle.ReadCSVFileWithDialog(out LastPath, out MetaWordCollection);
+        else if (e.ToLower() == "words") Handles.FileHandle.ReadWordsFileWithDialog(out LastPath, out MetaWordCollection);
+        else MessengerHelper.SendString("类型参数错误，当前参数类型为：" + e, MessengerHelper.TErrorLog);
 
-                if (FileService.ReadStringFile(path, out string content) && WordService.FromCSV(content, out MetaWordCollection))
-                {
-                    MessengerHelper.SendString(string.Format("加载了{0}个单词 . 加载地址 : {1}", MetaWordCollection.Count, path), MessengerHelper.TInfoLog);
-                }
+    }
 
-            }
-            else if (e.ToLower() == "words")
-            {
-                var recall = DialogService.OpenFileDlg(DialogService.FilterBuilder("words", true), out string path);
-                if (!recall)
-                {
-                    MessengerHelper.SendString("Words文件打开失败", MessengerHelper.TErrorLog);
-                }
-
-                if (FileService.ReadByteFile(path, out var content) && WordService.FromBytes(content, out MetaWordCollection))
-                {
-                    MessengerHelper.SendString(string.Format("加载了{0}个单词 . 加载地址 : {1}", MetaWordCollection.Count, path), MessengerHelper.TInfoLog);
-                }
-            }
-            else
-            {
-                throw new Exception("类型参数错误，当前参数类型为：" + e);
-            }
-
-        }
-        catch (Exception exception)
-        {
-            MessengerHelper.SendString(exception.Message, MessengerHelper.TErrorLog);
-        }
+    public void SaveFileWithDialog(object obj,string e)
+    {
+        if (e.ToLower() == "csv") Handles.FileHandle.SaveCSVFileWithDialog(MetaWordCollection,out LastPath);
+        else if (e.ToLower() == "words") Handles.FileHandle.SaveWordsFileWithDialog(MetaWordCollection, out LastPath);
+        else MessengerHelper.SendString("类型参数错误，当前参数类型为：" + e, MessengerHelper.TErrorLog);
     }
     #endregion
 
@@ -95,8 +70,9 @@ public class ShellViewModel : ObservableObject
         MessengerHelper.RegisterString(this, MessengerHelper.TErrorLog, (s, e) => { ShellLog = e; });
 
 
-        // 打开文件窗口
+        // 文件
         MessengerHelper.RegisterString(this, MessengerHelper.TOpenFileDialog, OpenFileWithDialog);
+        MessengerHelper.RegisterString(this, MessengerHelper.TSaveFileDialog, SaveFileWithDialog);
 
         // 测试
         MessengerHelper.RegisterString(this, MessengerHelper.TTestCommand, Test);
@@ -129,7 +105,7 @@ public class ShellViewModel : ObservableObject
     /// </summary>
     public void CommandInitialized()
     {
-        
+
     }
 
 
