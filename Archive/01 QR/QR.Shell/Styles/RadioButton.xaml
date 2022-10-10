@@ -1,0 +1,59 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Base/RadioButtonBase.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/QR.Shell;component/Resources/Brushes.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <Style
+        x:Key="RadioButtonDefault"
+        BasedOn="{StaticResource RadioButtonBase}"
+        TargetType="RadioButton">
+        <Setter Property="Background" Value="{DynamicResource RegionBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}" />
+    </Style>
+
+    <Style
+        x:Key="RadioButtonPrimary"
+        BasedOn="{StaticResource RadioButtonDefault}"
+        TargetType="RadioButton">
+
+        <Style.Triggers>
+            <Trigger Property="IsChecked" Value="true">
+                <Setter Property="Background" Value="{DynamicResource PrimaryBrush}" />
+                <Setter Property="Foreground" Value="{DynamicResource ReverseTextBrush}" />
+                <Setter Property="BorderThickness" Value="0" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style
+        x:Key="RadioButtonInfo"
+        BasedOn="{StaticResource RadioButtonDefault}"
+        TargetType="RadioButton">
+
+        <Style.Triggers>
+            <Trigger Property="IsChecked" Value="true">
+                <Setter Property="Background" Value="{DynamicResource InfoBrush}" />
+                <Setter Property="Foreground" Value="{DynamicResource ReverseTextBrush}" />
+                <Setter Property="BorderThickness" Value="0" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style
+        x:Key="RadioButtonWarning"
+        BasedOn="{StaticResource RadioButtonDefault}"
+        TargetType="RadioButton">
+
+        <Style.Triggers>
+            <Trigger Property="IsChecked" Value="true">
+                <Setter Property="Background" Value="{DynamicResource WarningBrush}" />
+                <Setter Property="Foreground" Value="{DynamicResource ReverseTextBrush}" />
+                <Setter Property="BorderThickness" Value="0" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+
+</ResourceDictionary>

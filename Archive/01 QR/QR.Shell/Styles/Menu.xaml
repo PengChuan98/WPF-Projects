@@ -1,0 +1,14 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Base/MenuBase.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/QR.Shell;component/Resources/Brushes.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <Style
+        x:Key="MenuDefault"
+        BasedOn="{StaticResource MenuBase}"
+        TargetType="Menu">
+        <Setter Property="Height" Value="32" />
+    </Style>
+
+</ResourceDictionary>

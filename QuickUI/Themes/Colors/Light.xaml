@@ -1,0 +1,14 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <SolidColorBrush x:Key="ThemeBackgroundColor">#eeeef2</SolidColorBrush>
+    <SolidColorBrush x:Key="ThemeForegroundColor">#1e1e1e</SolidColorBrush>
+
+    <SolidColorBrush x:Key="WindowBorderColor1">red</SolidColorBrush>
+    <SolidColorBrush x:Key="WindowBorderColor2">blue</SolidColorBrush>
+
+    <SolidColorBrush x:Key="WindowTitlebarButtonOverBackground">#fcfcfd</SolidColorBrush>
+    <SolidColorBrush x:Key="WindowTitlebarButtonOverForeground">#006cbe</SolidColorBrush>
+
+    <SolidColorBrush x:Key="WindowTitlebarButtonPressedBackground">#006cbe</SolidColorBrush>
+    <SolidColorBrush x:Key="WindowTitlebarButtonPressedForeground">#ffffff</SolidColorBrush>
+
+</ResourceDictionary>

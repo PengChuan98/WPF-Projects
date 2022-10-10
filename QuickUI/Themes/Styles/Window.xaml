@@ -1,0 +1,6 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/QuickUI;component/Themes/Styles/Base/BaseWindowStyle.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+    <!--<Style BasedOn="{StaticResource BaseWindowStyle}" TargetType="Window" />-->
+</ResourceDictionary>

@@ -1,0 +1,99 @@
+﻿<Window
+    x:Class="PureWindow.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:attach="clr-namespace:QuickUI.Controls.Attach;assembly=QuickUI"
+    xmlns:control="clr-namespace:QuickUI.Controls;assembly=QuickUI"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:PureWindow"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Name="window"
+    Title="MainWindow"
+    Width="800"
+    Height="450"
+    Style="{StaticResource PureWindow}"
+    mc:Ignorable="d">
+    <StackPanel attach:WindowAttach.IsDragElement="True" Background="AliceBlue">
+        <StackPanel
+            Height="32"
+            Background="#eeeef2"
+            Orientation="Horizontal"
+            SnapsToDevicePixels="True"
+            Visibility="Visible"
+            WindowChrome.IsHitTestVisibleInChrome="True">
+            <Image
+                Width="32"
+                Height="32"
+                Source="{Binding ElementName=window, Path=Icon}" />
+            <Label
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Content="{Binding ElementName=window, Path=Title}"
+                FontSize="16"
+                Foreground="Red" />
+            <Menu>
+                <MenuItem Header="测试1">
+                    <MenuItem Margin="5" Style="{StaticResource BaseBlankMenuItemStyle}">
+                        <MenuItem.Header>
+                            <StackPanel Orientation="Vertical">
+                                <Button
+                                    Height="32"
+                                    Padding="10,0"
+                                    Content="ssssssssssssssssssssssssssssssssssss"
+                                    Style="{StaticResource DefaultButtonStyle}" />
+                            </StackPanel>
+                        </MenuItem.Header>
+                    </MenuItem>
+
+                    <MenuItem Margin="5" Style="{StaticResource BaseBlankMenuItemStyle}">
+                        <MenuItem.Header>
+                            <StackPanel Orientation="Vertical">
+                                <Button
+                                    Height="32"
+                                    Padding="10,0"
+                                    Content="ssssssssssssssssssssssssssssssssssss"
+                                    Style="{StaticResource DefaultButtonStyle}" />
+                            </StackPanel>
+                        </MenuItem.Header>
+                    </MenuItem>
+
+                    <MenuItem Margin="5" Style="{StaticResource BaseBlankMenuItemStyle}">
+                        <MenuItem.Header>
+                            <StackPanel Orientation="Vertical">
+                                <Button
+                                    Height="32"
+                                    Padding="10,0"
+                                    Content="ssssssssssssssssssssssssssssssssssss"
+                                    Style="{StaticResource DefaultButtonStyle}" />
+                            </StackPanel>
+                        </MenuItem.Header>
+                    </MenuItem>
+
+                    <MenuItem Margin="5" Style="{StaticResource BaseBlankMenuItemStyle}">
+                        <MenuItem.Header>
+                            <StackPanel Orientation="Vertical">
+                                <Button
+                                    Height="32"
+                                    Padding="10,0"
+                                    Content="ssssssssssssssssssssssssssssssssssss"
+                                    Style="{StaticResource DefaultButtonStyle}" />
+                            </StackPanel>
+                        </MenuItem.Header>
+                    </MenuItem>
+                </MenuItem>
+                <MenuItem Header="测试2" />
+                <MenuItem Header="测试3" />
+                <MenuItem Header="测试4" />
+            </Menu>
+        </StackPanel>
+
+
+        <Button
+            Padding="50"
+            Click="Button_Click"
+            Content="关闭"
+            Style="{StaticResource DefaultButtonStyle}" />
+
+
+    </StackPanel>
+</Window>
