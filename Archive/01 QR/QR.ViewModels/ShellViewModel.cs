@@ -107,6 +107,32 @@ public class ShellViewModel : ObservableObject
 
         // GridView
         MessengerHelper.RegisterString(this, MessengerHelper.TGridSizeChanged, OnGridSizeChanged);
+        MessengerHelper.RegisterString(this, MessengerHelper.TGridGroupChanged, OnGridGroupChanged);
+    }
+
+    /// <summary>
+    /// 渲染Grid
+    /// </summary>
+    private void RenderGridPanel()
+    {
+        // 获取显示数据
+        var temp = ListHelper<CellViewModel>.Split(CellViewModelCollection, GViewModel.Columns * GViewModel.Rows, GViewModel.Group);
+        SortItems(temp, WProperty.Order);
+
+        // 赋值
+        GViewModel.ItemCollection = temp;
+    }
+
+    private void OnGridGroupChanged(object recipient, string message)
+    {
+        try
+        {
+            RenderGridPanel();
+        }
+        catch (Exception e)
+        {
+            MessengerHelper.SendString(e.Message, MessengerHelper.TErrorLog);
+        }
     }
 
     /// <summary>
@@ -124,12 +150,8 @@ public class ShellViewModel : ObservableObject
             // 计算
             GViewModel.MaxGroup = (int)Math.Ceiling(Words.Count / (double)(GViewModel.Rows * GViewModel.Columns));
 
-            // 获取显示数据
-            var temp = ListHelper<CellViewModel>.Split(CellViewModelCollection, GViewModel.Columns * GViewModel.Rows, GViewModel.Group);
-            SortItems(temp, WProperty.Order);
-
-            // 赋值
-            GViewModel.ItemCollection = temp;
+            // 显示
+            RenderGridPanel();
         }
         catch (Exception e)
         {
@@ -171,12 +193,8 @@ public class ShellViewModel : ObservableObject
             // 计算
             GViewModel.MaxGroup = (int)Math.Ceiling(Words.Count / (double)(GViewModel.Rows * GViewModel.Columns));
 
-            // 获取显示数据
-            var temp = ListHelper<CellViewModel>.Split(CellViewModelCollection, GViewModel.Columns * GViewModel.Rows, GViewModel.Group);
-            SortItems(temp, WProperty.Order);
-
-            // 赋值
-            GViewModel.ItemCollection = temp;
+            // 显示
+            RenderGridPanel();
         }
         catch (Exception e)
         {

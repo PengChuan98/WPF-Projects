@@ -23,6 +23,7 @@ public static class MessengerHelper
 
     // GridViewModel
     public readonly static string TGridSizeChanged = "NGridSizeChanged";
+    public readonly static string TGridGroupChanged = "NGridGroupChanged";
 
     // 特殊
     public readonly static string TLoadWordsSuccess = "NLoadWordsSuccess";

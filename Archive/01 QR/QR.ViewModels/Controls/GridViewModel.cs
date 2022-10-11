@@ -54,7 +54,11 @@ public class GridViewModel : ObservableObject
     public int Group
     {
         get => GProperty.Group;
-        set => SetProperty(ref GProperty.Group, value);
+        set
+        {
+            SetProperty(ref GProperty.Group, value);
+            OnGroupChanged();
+        }
     }
 
     public int MaxGroup
@@ -95,6 +99,12 @@ public class GridViewModel : ObservableObject
     /// </summary>
     public void OnSizeChanged()
         => MessengerHelper.SendEmptyString(MessengerHelper.TGridSizeChanged);
+
+    /// <summary>
+    /// 当Group改变的时候
+    /// </summary>
+    public void OnGroupChanged()
+        => MessengerHelper.SendEmptyString(MessengerHelper.TGridGroupChanged);
 
 
     #endregion
