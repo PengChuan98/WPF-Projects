@@ -22,7 +22,11 @@ public class ShellViewModel : ObservableObject
     public Order WordOrder
     {
         get => WProperty.Order;
-        set => SetProperty(ref WProperty.Order, value);
+        set
+        {
+            SetProperty(ref WProperty.Order, value);
+            RenderGridPanel();
+        }
     }
 
     public Voice WordVoice
@@ -33,12 +37,20 @@ public class ShellViewModel : ObservableObject
     public Source WordSource
     {
         get => WProperty.Source;
-        set => SetProperty(ref WProperty.Source, value);
+        set
+        {
+            SetProperty(ref WProperty.Source, value);
+            GViewModel.RefreshCells();
+        }
     }
     public Pattern WordPattern
     {
         get => WProperty.Pattern;
-        set => SetProperty(ref WProperty.Pattern, value);
+        set
+        {
+            SetProperty(ref WProperty.Pattern, value);
+            GViewModel.RefreshCells();
+        }
     }
 
     /// <summary>
@@ -77,6 +89,7 @@ public class ShellViewModel : ObservableObject
 
     // 待操作视图模型集合
     public List<CellViewModel> CellViewModelCollection { get; set; } = new();
+    public List<CellViewModel> CellViewModelItems { get; set; } = new();
     #endregion
 
     #region 临时核心字段
@@ -115,6 +128,8 @@ public class ShellViewModel : ObservableObject
     /// </summary>
     private void RenderGridPanel()
     {
+        if (CellViewModelCollection.Count == 0 || GViewModel == null) return;
+
         // 获取显示数据
         var temp = ListHelper<CellViewModel>.Split(CellViewModelCollection, GViewModel.Columns * GViewModel.Rows, GViewModel.Group);
         SortItems(temp, WProperty.Order);
@@ -253,10 +268,5 @@ public class ShellViewModel : ObservableObject
         }
     }
 
-    public ShellViewModel()
-    {
-        MessengerInitialized();
-
-        //PanelViewModel = GViewModel;
-    }
+    public ShellViewModel() => MessengerInitialized();
 }

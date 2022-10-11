@@ -24,7 +24,7 @@ namespace QR.Shell.Views
         public CellView()
         {
             InitializeComponent();
-            this.DataContextChanged += (s, e) => ((CellViewModel)DataContext)?.Reset();
+            this.DataContextChanged += (s, e) => ((CellViewModel)DataContext)?.Refresh();
         }
 
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)

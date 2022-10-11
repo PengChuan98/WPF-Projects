@@ -109,8 +109,6 @@ public class GridViewModel : ObservableObject
 
     #endregion
 
-    public void ResetProperty()
-    {
-        Rows = ValueBox.Rows;
-    }
+    public void RefreshCells()
+        => ItemCollection?.ForEach(item => item.Refresh());
 }

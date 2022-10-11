@@ -170,7 +170,7 @@ public class CellViewModel : ObservableObject
     /// <summary>
     /// 恢复初始状态
     /// </summary>
-    public void Reset()
+    public void Refresh()
     {
         timer?.Stop();
         ShowFront();
