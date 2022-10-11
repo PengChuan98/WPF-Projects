@@ -14,10 +14,11 @@
     xmlns:vm="clr-namespace:QR.ViewModels;assembly=QR.ViewModels"
     Name="window"
     Title="QR"
-    Width="1000"
-    Height="500"
+    Width="750"
+    Height="450"
+    MinWidth="750"
+    MinHeight="450"
     Style="{StaticResource NoEdge}"
-    Topmost="True"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
     <Window.Resources>
@@ -31,17 +32,15 @@
 
     <DockPanel DataContext="{StaticResource shellViewModel}">
         <!--  标题栏  -->
-        <Grid
+        <StackPanel
             Height="32"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
             DockPanel.Dock="Top"
+            Orientation="Horizontal"
             WindowChrome.IsHitTestVisibleInChrome="True">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
 
             <Label
-                Grid.Column="0"
                 Margin="5,0,2,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
@@ -52,8 +51,8 @@
                 Foreground="{DynamicResource WindowTitleColor}" />
 
 
-            <Menu x:Name="menu" Grid.Column="1">
-                <MenuItem DataContext="{Binding MViewModel}" Header="文件">
+            <Menu x:Name="menu" Background="Red">
+                <MenuItem DataContext="{Binding MenuVM}" Header="文件">
                     <MenuItem Header="打开">
                         <MenuItem
                             Command="{Binding FCommand.OpenDialogCommand}"
@@ -78,7 +77,7 @@
                 </MenuItem>
 
                 <!--  TODO 这个地方会根据实际的选择的单词模式更改  -->
-                <MenuItem DataContext="{Binding GViewModel}" Header="Grid">
+                <MenuItem DataContext="{Binding GridVM}" Header="Grid">
                     <MenuItem.Resources>
                         <Style BasedOn="{StaticResource SliderInfoPlus}" TargetType="control:InfoSlider">
                             <Setter Property="Margin" Value="2" />
@@ -284,16 +283,182 @@
                     </MenuItem>
                 </MenuItem>
 
-                <MenuItem Command="{Binding MViewModel.TCommand.Test1}" Header="测试" />
-                <MenuItem Header="工具" IsEnabled="False">
-                    <MenuItem Header="打印" />
+                <MenuItem Header="下载">
+                    <MenuItem>
+                        <MenuItem.Header>
+                            <Button Content="当前Group" Style="{StaticResource ButtonWarning}" />
+                        </MenuItem.Header>
+                    </MenuItem>
+
+                    <MenuItem>
+                        <MenuItem.Header>
+                            <StackPanel>
+                                <control:InfoSlider Style="{StaticResource SliderInfoPlus}" />
+                                <Button Content="范围内" Style="{StaticResource ButtonWarning}" />
+                            </StackPanel>
+                        </MenuItem.Header>
+                    </MenuItem>
+
+                    <MenuItem>
+                        <MenuItem.Header>
+                            <StackPanel>
+                                <control:InfoSlider Style="{StaticResource SliderInfoPlus}" />
+                                <Button Content="间隔自动下载" Style="{StaticResource ButtonWarning}" />
+                            </StackPanel>
+                        </MenuItem.Header>
+                    </MenuItem>
                 </MenuItem>
 
-                <MenuItem Header="设置" IsEnabled="False" />
-                <MenuItem Header="帮助" IsEnabled="False" />
+                <MenuItem Header="打印">
+                    <MenuItem>
+                        <MenuItem.Header>
+                            <UniformGrid Columns="3">
+                                <Label Content="水平间距" Style="{StaticResource LabelPrimary}" />
+                                <Label Content="垂直间距" Style="{StaticResource LabelPrimary}" />
+                                <Label Content="页边距" Style="{StaticResource LabelPrimary}" />
+                            </UniformGrid>
+                        </MenuItem.Header>
+                    </MenuItem>
+
+                    <MenuItem>
+                        <MenuItem.Header>
+                            <DockPanel>
+                                <Label
+                                    Margin="{StaticResource PropertyItemLabelMargin}"
+                                    Padding="{StaticResource PropertyItemLabelPadding}"
+                                    Content="方格数"
+                                    DockPanel.Dock="Left"
+                                    Style="{StaticResource LabelInfo}" />
+                                <UniformGrid Columns="5" DockPanel.Dock="Right">
+                                    <RadioButton Content="0" />
+                                    <RadioButton Content="1" />
+                                    <RadioButton Content="2" />
+                                    <RadioButton Content="3" />
+                                    <RadioButton Content="4" />
+
+                                </UniformGrid>
+                            </DockPanel>
+                        </MenuItem.Header>
+                    </MenuItem>
+
+                    <MenuItem>
+                        <MenuItem.Header>
+                            <UniformGrid Columns="2">
+                                <ToggleButton attach:TagElement.Tag="学习模式" />
+                                <ToggleButton attach:TagElement.Tag="回顾模式" />
+                            </UniformGrid>
+                        </MenuItem.Header>
+                    </MenuItem>
+
+                    <MenuItem>
+                        <MenuItem.Header>
+                            <UniformGrid Columns="3">
+                                <ToggleButton attach:TagElement.Tag="随机生成" />
+                                <ToggleButton attach:TagElement.Tag="横向布局" />
+                                <ToggleButton attach:TagElement.Tag="镜像模式" />
+                            </UniformGrid>
+                        </MenuItem.Header>
+                    </MenuItem>
+
+                    <MenuItem>
+                        <MenuItem.Header>
+                            <Button Content="打印" Style="{StaticResource ButtonWarning}" />
+                        </MenuItem.Header>
+                    </MenuItem>
+                </MenuItem>
+
+                <MenuItem Header="设置" Style="{StaticResource MenuItemDefault}">
+                    <MenuItem.Resources>
+                        <Thickness x:Key="PropertyItemMargin">2</Thickness>
+                        <Thickness x:Key="PropertyItemLabelMargin">7,0</Thickness>
+                        <Thickness x:Key="PropertyItemLabelPadding">5</Thickness>
+
+                        <Style BasedOn="{StaticResource ToggleLabelButtonDefault}" TargetType="ToggleButton">
+                            <Setter Property="Margin" Value="4,2" />
+                            <Setter Property="Padding" Value="0,3.5" />
+                        </Style>
+
+                        <Style BasedOn="{StaticResource RadioButtonPrimary}" TargetType="RadioButton">
+                            <Setter Property="Margin" Value="4,2" />
+                            <Setter Property="Padding" Value="0,3" />
+                        </Style>
+
+
+                        <Style BasedOn="{StaticResource MenuItemBlank}" TargetType="MenuItem">
+                            <Setter Property="Width" Value="350" />
+                        </Style>
+                    </MenuItem.Resources>
+
+                    <MenuItem Padding="{StaticResource PropertyItemMargin}" IsEnabled="False">
+                        <MenuItem.Header>
+                            <ToggleButton attach:TagElement.Tag="启动时自动加载" />
+                        </MenuItem.Header>
+                    </MenuItem>
+
+                    <MenuItem Padding="{StaticResource PropertyItemMargin}" IsEnabled="False">
+                        <MenuItem.Header>
+                            <UniformGrid Columns="2">
+                                <ToggleButton attach:TagElement.Tag="自动保存设置" />
+                                <ToggleButton attach:TagElement.Tag="自动保存单词" />
+                            </UniformGrid>
+                        </MenuItem.Header>
+                    </MenuItem>
+
+                    <MenuItem Padding="{StaticResource PropertyItemMargin}" IsEnabled="False">
+                        <MenuItem.Header>
+                            <UniformGrid Columns="2">
+                                <ToggleButton attach:TagElement.Tag="退出保存设置" />
+                                <ToggleButton attach:TagElement.Tag="退出保存单词" />
+                            </UniformGrid>
+                        </MenuItem.Header>
+                    </MenuItem>
+
+                    <MenuItem Padding="{StaticResource PropertyItemMargin}">
+                        <MenuItem.Header>
+                            <UniformGrid Columns="2">
+                                <ToggleButton
+                                    attach:TagElement.Tag="窗口置顶"
+                                    attach:WindowAttach.IsTopmostElement="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsChecked}"
+                                    IsChecked="{Binding SettingVM.TopMost, Mode=TwoWay}" />
+                                <ToggleButton attach:TagElement.Tag="底部状态栏" IsChecked="{Binding SettingVM.Hide, Mode=TwoWay}" />
+                            </UniformGrid>
+                        </MenuItem.Header>
+                    </MenuItem>
+
+                    <MenuItem Padding="{StaticResource PropertyItemMargin}">
+                        <MenuItem.Header>
+                            <UniformGrid Columns="3">
+                                <RadioButton
+                                    Content="浅色模式"
+                                    GroupName="Theme"
+                                    IsChecked="True" />
+                                <RadioButton
+                                    Content="灰色模式"
+                                    GroupName="Theme"
+                                    IsEnabled="False" />
+                                <RadioButton
+                                    Content="深色模式"
+                                    GroupName="Theme"
+                                    IsEnabled="False" />
+                            </UniformGrid>
+                        </MenuItem.Header>
+                    </MenuItem>
+                </MenuItem>
+
+                <MenuItem Header="帮助" IsEnabled="True" />
+
+                <MenuItem Command="{Binding MenuVM.TCommand.Test1}" Header="测试" />
+
             </Menu>
 
-        </Grid>
+            <ToggleButton
+                Margin="10,5"
+                Padding="0"
+                attach:TagElement.Tag="全屏"
+                FontSize="8"
+                Style="{StaticResource ToggleLabelButtonDefault}" />
+
+        </StackPanel>
 
 
         <!--  功能栏  -->
@@ -303,7 +468,7 @@
             DockPanel.Dock="Bottom">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" DataContext="{Binding SViewModel}" />
+                <RowDefinition Height="Auto" DataContext="{Binding StatusVM}" />
             </Grid.RowDefinitions>
 
             <!--  面板  -->
@@ -311,7 +476,7 @@
                 x:Name="panel"
                 Grid.Row="0"
                 Margin="5"
-                DataContext="{Binding GViewModel}">
+                DataContext="{Binding GridVM}">
                 <view:GridView
                     viewsAttach:CellViewAttach.CellFontSize="{Binding CellSize}"
                     viewsAttach:CellViewAttach.CellStretch="{Binding CellStretch}"
@@ -324,11 +489,11 @@
             <Grid
                 Grid.Row="1"
                 Height="26"
-                DataContext="{Binding SViewModel}">
+                Visibility="{Binding SettingVM.Hide, Converter={convert:Bool2Visible}, Mode=TwoWay}">
                 <Label
                     attach:LabelAttach.QuickRemove="True"
                     Background="#eeeef2"
-                    Content="{Binding ShellLog}" />
+                    Content="{Binding StatusVM.ShellLog}" />
             </Grid>
 
         </Grid>

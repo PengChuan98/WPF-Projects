@@ -17,8 +17,8 @@ public static class ValueBox
     public readonly static int Columns = 6;
     public readonly static int MaxGroup = 1;
     public readonly static int Group = 1;
-    public readonly static double CellSize = 25;
-    public readonly static System.Windows.Media.Stretch CellStretch = System.Windows.Media.Stretch.Uniform;
+    public readonly static double CellSize = 16;
+    public readonly static System.Windows.Media.Stretch CellStretch = System.Windows.Media.Stretch.None;
 
     public static void ResetGridViewModel(GridViewModel vm)
     {

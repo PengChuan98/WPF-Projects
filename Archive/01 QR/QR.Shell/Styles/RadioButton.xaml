@@ -22,8 +22,9 @@
         <Style.Triggers>
             <Trigger Property="IsChecked" Value="true">
                 <Setter Property="Background" Value="{DynamicResource PrimaryBrush}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource PrimaryBrush}" />
                 <Setter Property="Foreground" Value="{DynamicResource ReverseTextBrush}" />
-                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="BorderThickness" Value="1" />
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -37,7 +38,8 @@
             <Trigger Property="IsChecked" Value="true">
                 <Setter Property="Background" Value="{DynamicResource InfoBrush}" />
                 <Setter Property="Foreground" Value="{DynamicResource ReverseTextBrush}" />
-                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="BorderBrush" Value="{DynamicResource InfoBrush}" />
+                <Setter Property="BorderThickness" Value="1" />
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -51,7 +53,8 @@
             <Trigger Property="IsChecked" Value="true">
                 <Setter Property="Background" Value="{DynamicResource WarningBrush}" />
                 <Setter Property="Foreground" Value="{DynamicResource ReverseTextBrush}" />
-                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="BorderBrush" Value="{DynamicResource WarningBrush}" />
+                <Setter Property="BorderThickness" Value="1" />
             </Trigger>
         </Style.Triggers>
     </Style>

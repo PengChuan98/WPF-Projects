@@ -40,7 +40,7 @@ public class ShellViewModel : ObservableObject
         set
         {
             SetProperty(ref WProperty.Source, value);
-            GViewModel.RefreshCells();
+            GridVM.RefreshCells();
         }
     }
     public Pattern WordPattern
@@ -49,7 +49,7 @@ public class ShellViewModel : ObservableObject
         set
         {
             SetProperty(ref WProperty.Pattern, value);
-            GViewModel.RefreshCells();
+            GridVM.RefreshCells();
         }
     }
 
@@ -71,13 +71,16 @@ public class ShellViewModel : ObservableObject
 
     #region ViewModels
     // TODO 多种模式的面板数据对象
-    public GridViewModel GViewModel { get; set; } = new();
+    public GridViewModel GridVM { get; set; } = new();
 
     // 状态栏
-    public StatusViewModel SViewModel { get; set; } = new();
+    public StatusViewModel StatusVM { get; set; } = new();
 
     // 菜单栏
-    public MenuViewModel MViewModel { get; set; } = new();
+    public MenuViewModel MenuVM { get; set; } = new();
+
+    // 设置
+    public SettingViewModel SettingVM { get; set; } = new();
     #endregion
 
     #region 全局核心字段
@@ -136,14 +139,14 @@ public class ShellViewModel : ObservableObject
     /// </summary>
     private void RenderGridPanel()
     {
-        if (CellViewModelCollection.Count == 0 || GViewModel == null) return;
+        if (CellViewModelCollection.Count == 0 || GridVM == null) return;
 
         // 获取显示数据
-        var temp = ListHelper<CellViewModel>.Split(CellViewModelCollection, GViewModel.Columns * GViewModel.Rows, GViewModel.Group);
+        var temp = ListHelper<CellViewModel>.Split(CellViewModelCollection, GridVM.Columns * GridVM.Rows, GridVM.Group);
         SortItems(temp, WProperty.Order);
 
         // 赋值
-        GViewModel.ItemCollection = temp;
+        GridVM.ItemCollection = temp;
     }
 
     private void OnGridGroupChanged(object recipient, string message)
@@ -171,7 +174,7 @@ public class ShellViewModel : ObservableObject
         try
         {
             // 计算
-            GViewModel.MaxGroup = (int)Math.Ceiling(Words.Count / (double)(GViewModel.Rows * GViewModel.Columns));
+            GridVM.MaxGroup = (int)Math.Ceiling(Words.Count / (double)(GridVM.Rows * GridVM.Columns));
 
             // 显示
             RenderGridPanel();
@@ -211,10 +214,10 @@ public class ShellViewModel : ObservableObject
             Words.ForEach(item => { CellViewModelCollection.Add(new(item, WProperty)); });
 
             // 初始化配置文件
-            ValueBox.ResetGridViewModel(GViewModel);
+            ValueBox.ResetGridViewModel(GridVM);
 
             // 计算
-            GViewModel.MaxGroup = (int)Math.Ceiling(Words.Count / (double)(GViewModel.Rows * GViewModel.Columns));
+            GridVM.MaxGroup = (int)Math.Ceiling(Words.Count / (double)(GridVM.Rows * GridVM.Columns));
 
             // 显示
             RenderGridPanel();
