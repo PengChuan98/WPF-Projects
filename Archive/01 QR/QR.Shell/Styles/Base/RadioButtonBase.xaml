@@ -5,7 +5,7 @@
 
 
     <Style x:Key="RadioButtonBase" TargetType="RadioButton">
-        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="BorderThickness" Value="1" />
         <Setter Property="FontSize" Value="12" />
         <Setter Property="SnapsToDevicePixels" Value="true" />
         <Setter Property="attach:BorderElement.CornerRadius" Value="5" />

@@ -5,6 +5,7 @@
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/QR.Shell;component/Resources/Brushes.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/QR.Shell;component/Resources/Effect/ThumbEffect.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <!--  TODO 之后这里的颜色使用附加属性添加  -->
@@ -195,5 +196,86 @@
         </Style.Triggers>
     </Style>
 
+
+    <ControlTemplate x:Key="InfoSliderTemplate" TargetType="Slider">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" MinHeight="{TemplateBinding MinHeight}" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <TickBar
+                x:Name="TopTick"
+                Grid.Row="0"
+                Height="4"
+                Margin="0,0,0,2"
+                Fill="{TemplateBinding Foreground}"
+                Placement="Top"
+                Visibility="Collapsed" />
+            <TickBar
+                x:Name="BottomTick"
+                Grid.Row="2"
+                Height="4"
+                Margin="0,2,0,0"
+                Fill="{TemplateBinding Foreground}"
+                Placement="Bottom"
+                Visibility="Collapsed" />
+            <Border
+                x:Name="TrackBackground"
+                Grid.Row="1"
+                Height="2"
+                Margin="9,0"
+                VerticalAlignment="center"
+                Background="{TemplateBinding Background}">
+                <Canvas x:Name="Canvas_SelectionRange" Visibility="Hidden">
+                    <Rectangle
+                        x:Name="PART_SelectionRange"
+                        Height="2"
+                        Fill="{DynamicResource AccentBrush}" />
+                </Canvas>
+            </Border>
+            <Track
+                x:Name="PART_Track"
+                Grid.Row="1"
+                Margin="9,0">
+                <Track.DecreaseRepeatButton>
+                    <RepeatButton
+                        Background="{DynamicResource PrimaryBrush}"
+                        Command="{x:Static Slider.DecreaseLarge}"
+                        Style="{StaticResource SliderRepeatButtonHorizontalStyle}" />
+                </Track.DecreaseRepeatButton>
+                <Track.IncreaseRepeatButton>
+                    <RepeatButton Command="{x:Static Slider.IncreaseLarge}" Style="{StaticResource SliderRepeatButtonHorizontalStyle}" />
+                </Track.IncreaseRepeatButton>
+                <Track.Thumb>
+                    <Thumb
+                        x:Name="Thumb"
+                        Width="18"
+                        Height="18"
+                        Margin="-9,0"
+                        VerticalAlignment="Center"
+                        ClipToBounds="False"
+                        Focusable="False"
+                        OverridesDefaultStyle="True"
+                        Template="{StaticResource SliderThumb}" />
+                </Track.Thumb>
+            </Track>
+        </Grid>
+        <ControlTemplate.Triggers>
+            <Trigger Property="TickPlacement" Value="TopLeft">
+                <Setter TargetName="TopTick" Property="Visibility" Value="Visible" />
+            </Trigger>
+            <Trigger Property="TickPlacement" Value="BottomRight">
+                <Setter TargetName="BottomTick" Property="Visibility" Value="Visible" />
+            </Trigger>
+            <Trigger Property="TickPlacement" Value="Both">
+                <Setter TargetName="TopTick" Property="Visibility" Value="Visible" />
+                <Setter TargetName="BottomTick" Property="Visibility" Value="Visible" />
+            </Trigger>
+            <Trigger Property="IsSelectionRangeEnabled" Value="true">
+                <Setter TargetName="Canvas_SelectionRange" Property="Visibility" Value="Visible" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
 
 </ResourceDictionary>

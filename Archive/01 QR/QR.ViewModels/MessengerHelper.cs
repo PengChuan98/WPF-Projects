@@ -21,6 +21,11 @@ public static class MessengerHelper
     public readonly static string TCellStretch = "DCellFontSize";
     public readonly static string TCellRefresh = "NCellRefresh";
 
+    // GridViewModel
+    public readonly static string TGridSizeChanged = "NGridSizeChanged";
+
+    // 特殊
+    public readonly static string TLoadWordsSuccess = "NLoadWordsSuccess";
 
     // 消息（日志）令牌
     public readonly static string TInfoLog = "SInfoLog";

@@ -28,6 +28,7 @@ public static class FileHandle
             if (FileService.ReadStringFile(csvPath, out string content) && WordService.FromCSV(content, out words))
             {
                 MessengerHelper.SendString(string.Format("加载了{0}个单词 . 加载地址 : {1}", words.Count, csvPath), MessengerHelper.TInfoLog);
+                MessengerHelper.SendEmptyString(MessengerHelper.TLoadWordsSuccess);
             }
         }
         catch (Exception exception)
@@ -54,6 +55,7 @@ public static class FileHandle
             if (FileService.ReadByteFile(wordsPath, out var content) && WordService.FromBytes(content, out words))
             {
                 MessengerHelper.SendString(string.Format("加载了{0}个单词 . 加载地址 : {1}", words.Count, wordsPath), MessengerHelper.TInfoLog);
+                MessengerHelper.SendEmptyString(MessengerHelper.TLoadWordsSuccess);
             }
         }
         catch (Exception exception)

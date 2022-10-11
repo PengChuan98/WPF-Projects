@@ -18,6 +18,7 @@
         BasedOn="{StaticResource RadioButtonDefault}"
         TargetType="RadioButton">
 
+        <Setter Property="BorderThickness" Value="1" />
         <Style.Triggers>
             <Trigger Property="IsChecked" Value="true">
                 <Setter Property="Background" Value="{DynamicResource PrimaryBrush}" />

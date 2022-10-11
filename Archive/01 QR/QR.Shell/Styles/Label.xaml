@@ -8,8 +8,8 @@
         x:Key="LabelDefault"
         BasedOn="{StaticResource LabelBase}"
         TargetType="Label">
-        <Setter Property="BorderThickness" Value="5" />
-        <Setter Property="Padding" Value="5,2" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="5,4" />
     </Style>
 
     <Style
@@ -39,5 +39,12 @@
         <Setter Property="BorderBrush" Value="{DynamicResource DarkWarningBrush}" />
     </Style>
 
-
+    <Style
+        x:Key="LabelNumber"
+        BasedOn="{StaticResource LabelDefault}"
+        TargetType="Label">
+        <Setter Property="Background" Value="#f6f6f6" />
+        <Setter Property="Foreground" Value="Black" />
+        <Setter Property="BorderBrush" Value="#adadad" />
+    </Style>
 </ResourceDictionary>

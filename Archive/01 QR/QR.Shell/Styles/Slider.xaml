@@ -1,12 +1,73 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:control="clr-namespace:QR.Shell.Controls">
+
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="Base/SliderBase.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
 
     <Style
-        x:Name="SliderPrimary"
-        BasedOn="{StaticResource ResourceKey=SliderBase}"
+        x:Key="SliderPrimary"
+        BasedOn="{StaticResource SliderBase}"
         TargetType="Slider" />
+
+    <Style x:Key="SliderInfoPlus" TargetType="control:InfoSlider">
+        <Setter Property="control:InfoSlider.HeaderWidth" Value="60" />
+        <Setter Property="control:InfoSlider.ValueWidth" Value="60" />
+
+        <Setter Property="control:InfoSlider.SliderMargin" Value="10,0" />
+        <Setter Property="control:InfoSlider.SliderWidth" Value="300" />
+
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Background" Value="Transparent" />
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Slider">
+                    <Border
+                        Width="{TemplateBinding Width}"
+                        Height="{TemplateBinding Height}"
+                        Margin="{TemplateBinding Margin}"
+                        Padding="{TemplateBinding Padding}"
+                        Background="{TemplateBinding Background}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Label
+                                Grid.Column="0"
+                                Width="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=(control:InfoSlider.HeaderWidth)}"
+                                Content="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=(control:InfoSlider.Header)}"
+                                Style="{DynamicResource LabelInfo}" />
+
+                            <Slider
+                                Grid.Column="1"
+                                Width="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=(control:InfoSlider.SliderWidth)}"
+                                Margin="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=(control:InfoSlider.SliderMargin)}"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Center"
+                                Delay="{TemplateBinding Delay}"
+                                IsSnapToTickEnabled="True"
+                                Maximum="{TemplateBinding Maximum}"
+                                Minimum="{TemplateBinding Minimum}"
+                                Style="{StaticResource SliderPrimary}"
+                                Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Value, Mode=TwoWay}" />
+
+                            <Label
+                                Grid.Column="2"
+                                Width="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=(control:InfoSlider.ValueWidth)}"
+                                Content="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Value}"
+                                Style="{DynamicResource LabelNumber}"
+                                ToolTip="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Content}" />
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
 </ResourceDictionary>

@@ -3,16 +3,18 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:attach="clr-namespace:QR.Shell.Controls.Attach"
+    xmlns:control="clr-namespace:QR.Shell.Controls"
     xmlns:convert="clr-namespace:QR.Shell.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:QR.Shell"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="clr-namespace:QR.Core.Models;assembly=QR.Core"
     xmlns:view="clr-namespace:QR.Shell.Views"
     xmlns:viewsAttach="clr-namespace:QR.Shell.Controls.ViewsAttach"
     xmlns:vm="clr-namespace:QR.ViewModels;assembly=QR.ViewModels"
     Name="window"
     Title="QR"
-    Width="600"
+    Width="1000"
     Height="500"
     Style="{StaticResource NoEdge}"
     Topmost="True"
@@ -24,7 +26,7 @@
 
         <!--  上下文  -->
         <vm:ShellViewModel x:Key="shellViewModel" />
-        <vm:MenuViewModel x:Key="menuViewModel" />
+
     </Window.Resources>
 
     <DockPanel DataContext="{StaticResource shellViewModel}">
@@ -50,35 +52,245 @@
                 Foreground="{DynamicResource WindowTitleColor}" />
 
 
-            <Menu
-                x:Name="menu"
-                Grid.Column="1"
-                DataContext="{StaticResource menuViewModel}">
-                <MenuItem Header="文件">
+            <Menu x:Name="menu" Grid.Column="1">
+                <MenuItem DataContext="{Binding MViewModel}" Header="文件">
                     <MenuItem Header="打开">
                         <MenuItem
-                            Command="{Binding OpenDialogCommand}"
+                            Command="{Binding FCommand.OpenDialogCommand}"
                             CommandParameter="CSV"
                             Header="打开CSV文件" />
                         <MenuItem
-                            Command="{Binding OpenDialogCommand}"
+                            Command="{Binding FCommand.OpenDialogCommand}"
                             CommandParameter="WORDS"
                             Header="打开Words文件" />
                     </MenuItem>
 
                     <MenuItem Header="保存">
                         <MenuItem
-                            Command="{Binding SaveDialogCommand}"
+                            Command="{Binding FCommand.SaveDialogCommand}"
                             CommandParameter="CSV"
                             Header="保存为CSV文件" />
                         <MenuItem
-                            Command="{Binding SaveDialogCommand}"
+                            Command="{Binding FCommand.SaveDialogCommand}"
                             CommandParameter="WORDS"
                             Header="保存为Words文件" />
                     </MenuItem>
                 </MenuItem>
 
-                <MenuItem Command="{Binding TestCommand}" Header="测试" />
+                <!--  TODO 这个地方会根据实际的选择的单词模式更改  -->
+                <MenuItem DataContext="{Binding GViewModel}" Header="Grid">
+                    <MenuItem.Resources>
+                        <Style BasedOn="{StaticResource SliderInfoPlus}" TargetType="control:InfoSlider">
+                            <Setter Property="Margin" Value="2" />
+                            <Setter Property="control:InfoSlider.HeaderWidth" Value="45" />
+                            <Setter Property="control:InfoSlider.ValueWidth" Value="50" />
+
+                            <Setter Property="control:InfoSlider.SliderMargin" Value="10,0" />
+                            <Setter Property="control:InfoSlider.SliderWidth" Value="250" />
+                        </Style>
+
+                        <Style BasedOn="{StaticResource RadioButtonPrimary}" TargetType="RadioButton">
+                            <Setter Property="Margin" Value="5,2" />
+                            <Setter Property="Padding" Value="0,3" />
+                        </Style>
+                    </MenuItem.Resources>
+
+                    <MenuItem Style="{StaticResource MenuItemBlank}">
+                        <MenuItem.Header>
+                            <control:InfoSlider
+                                control:InfoSlider.Header="行"
+                                Maximum="30"
+                                Minimum="1"
+                                Value="{Binding Rows, Mode=TwoWay, Delay=200}" />
+                        </MenuItem.Header>
+                    </MenuItem>
+
+                    <MenuItem Style="{StaticResource MenuItemBlank}">
+                        <MenuItem.Header>
+                            <control:InfoSlider
+                                control:InfoSlider.Header="列"
+                                Maximum="30"
+                                Minimum="1"
+                                Value="{Binding Columns, Mode=TwoWay, Delay=200}" />
+                        </MenuItem.Header>
+                    </MenuItem>
+
+
+                    <MenuItem Style="{StaticResource MenuItemBlank}">
+                        <MenuItem.Header>
+                            <control:InfoSlider
+                                control:InfoSlider.Header="组"
+                                Maximum="{Binding MaxGroup, Mode=TwoWay}"
+                                Minimum="1"
+                                Value="{Binding Group, Mode=TwoWay, Delay=200}" />
+                        </MenuItem.Header>
+                    </MenuItem>
+
+                    <MenuItem Style="{StaticResource MenuItemBlank}">
+                        <MenuItem.Header>
+                            <control:InfoSlider
+                                control:InfoSlider.Header="Size"
+                                Maximum="100"
+                                Minimum="8"
+                                Value="{Binding CellSize, Mode=TwoWay}" />
+                        </MenuItem.Header>
+                    </MenuItem>
+
+                    <MenuItem Style="{StaticResource MenuItemBlank}">
+                        <MenuItem.Header>
+                            <UniformGrid Columns="2">
+                                <RadioButton
+                                    Content="原始大小"
+                                    GroupName="CellStretch"
+                                    IsChecked="{Binding CellStretch, Mode=TwoWay, Converter={convert:Enum2Bool}, ConverterParameter={x:Static Stretch.None}}" />
+
+                                <RadioButton
+                                    Content="自适应大小"
+                                    GroupName="CellStretch"
+                                    IsChecked="{Binding CellStretch, Mode=TwoWay, Converter={convert:Enum2Bool}, ConverterParameter={x:Static Stretch.Uniform}}" />
+
+                            </UniformGrid>
+                        </MenuItem.Header>
+                    </MenuItem>
+                </MenuItem>
+
+                <MenuItem Header="属性" Style="{StaticResource MenuItemDefault}">
+                    <MenuItem.Resources>
+                        <Thickness x:Key="PropertyItemMargin">2</Thickness>
+                        <Thickness x:Key="PropertyItemLabelMargin">7,0</Thickness>
+                        <Thickness x:Key="PropertyItemLabelPadding">5</Thickness>
+
+                        <Style BasedOn="{StaticResource RadioButtonPrimary}" TargetType="RadioButton">
+                            <Setter Property="Margin" Value="4,2" />
+                            <Setter Property="Padding" Value="0,3" />
+                        </Style>
+
+                        <Style BasedOn="{StaticResource MenuItemBlank}" TargetType="MenuItem">
+                            <Setter Property="Width" Value="400" />
+                        </Style>
+                    </MenuItem.Resources>
+
+                    <MenuItem Padding="{StaticResource PropertyItemMargin}">
+                        <MenuItem.Header>
+                            <DockPanel>
+                                <Label
+                                    Margin="{StaticResource PropertyItemLabelMargin}"
+                                    Padding="{StaticResource PropertyItemLabelPadding}"
+                                    Content="单词顺序"
+                                    DockPanel.Dock="Left"
+                                    Style="{StaticResource LabelInfo}" />
+                                <UniformGrid Columns="4" DockPanel.Dock="Right">
+                                    <RadioButton
+                                        Content="原序"
+                                        GroupName="WordOrder"
+                                        IsChecked="{Binding WordOrder, Mode=TwoWay, Converter={convert:Enum2Bool}, ConverterParameter={x:Static models:Order.None}}" />
+                                    <RadioButton
+                                        Content="顺序"
+                                        GroupName="WordOrder"
+                                        IsChecked="{Binding WordOrder, Mode=TwoWay, Converter={convert:Enum2Bool}, ConverterParameter={x:Static models:Order.Sequence}}" />
+                                    <RadioButton
+                                        Content="逆序"
+                                        GroupName="WordOrder"
+                                        IsChecked="{Binding WordOrder, Mode=TwoWay, Converter={convert:Enum2Bool}, ConverterParameter={x:Static models:Order.Reserve}}" />
+                                    <RadioButton
+                                        Content="乱序"
+                                        GroupName="WordOrder"
+                                        IsChecked="{Binding WordOrder, Mode=TwoWay, Converter={convert:Enum2Bool}, ConverterParameter={x:Static models:Order.Random}}" />
+                                </UniformGrid>
+                            </DockPanel>
+                        </MenuItem.Header>
+                    </MenuItem>
+
+                    <MenuItem Padding="{StaticResource PropertyItemMargin}">
+                        <MenuItem.Header>
+                            <DockPanel>
+                                <Label
+                                    Margin="{StaticResource PropertyItemLabelMargin}"
+                                    Padding="{StaticResource PropertyItemLabelPadding}"
+                                    Content="语音资源"
+                                    DockPanel.Dock="Left"
+                                    Style="{StaticResource LabelInfo}" />
+                                <UniformGrid Columns="3" DockPanel.Dock="Right">
+                                    <RadioButton
+                                        Content="本地"
+                                        GroupName="WordVoice"
+                                        IsChecked="{Binding WordVoice, Converter={convert:Enum2Bool}, ConverterParameter={x:Static models:Voice.Local}}" />
+                                    <RadioButton
+                                        Content="USA"
+                                        GroupName="WordVoice"
+                                        IsChecked="{Binding WordVoice, Converter={convert:Enum2Bool}, ConverterParameter={x:Static models:Voice.USA}}" />
+                                    <RadioButton
+                                        Content="UK"
+                                        GroupName="WordVoice"
+                                        IsChecked="{Binding WordVoice, Converter={convert:Enum2Bool}, ConverterParameter={x:Static models:Voice.UK}}" />
+                                </UniformGrid>
+                            </DockPanel>
+                        </MenuItem.Header>
+                    </MenuItem>
+
+
+                    <MenuItem Padding="{StaticResource PropertyItemMargin}">
+                        <MenuItem.Header>
+                            <DockPanel>
+                                <Label
+                                    Margin="{StaticResource PropertyItemLabelMargin}"
+                                    Padding="{StaticResource PropertyItemLabelPadding}"
+                                    Content="词义资源"
+                                    DockPanel.Dock="Left"
+                                    Style="{StaticResource LabelInfo}" />
+                                <UniformGrid Columns="2" DockPanel.Dock="Right">
+                                    <RadioButton
+                                        Content="本地"
+                                        GroupName="WordSource"
+                                        IsChecked="{Binding WordSource, Converter={convert:Enum2Bool}, ConverterParameter={x:Static models:Source.Native}}" />
+                                    <RadioButton
+                                        Content="网络"
+                                        GroupName="WordSource"
+                                        IsChecked="{Binding WordSource, Converter={convert:Enum2Bool}, ConverterParameter={x:Static models:Source.Web}}" />
+                                </UniformGrid>
+                            </DockPanel>
+                        </MenuItem.Header>
+                    </MenuItem>
+
+                    <MenuItem Padding="{StaticResource PropertyItemMargin}">
+                        <MenuItem.Header>
+                            <DockPanel>
+                                <Label
+                                    Margin="{StaticResource PropertyItemLabelMargin}"
+                                    Padding="{StaticResource PropertyItemLabelPadding}"
+                                    Content="显示模式"
+                                    DockPanel.Dock="Left"
+                                    Style="{StaticResource LabelInfo}" />
+                                <UniformGrid Columns="4" DockPanel.Dock="Right">
+                                    <RadioButton
+                                        Content="空"
+                                        GroupName="WordPattern"
+                                        IsChecked="{Binding WordPattern, Converter={convert:Enum2Bool}, ConverterParameter={x:Static models:Pattern.None}}" />
+                                    <RadioButton
+                                        Content="英语"
+                                        GroupName="WordPattern"
+                                        IsChecked="{Binding WordPattern, Converter={convert:Enum2Bool}, ConverterParameter={x:Static models:Pattern.English}}" />
+                                    <RadioButton
+                                        Content="中文"
+                                        GroupName="WordPattern"
+                                        IsChecked="{Binding WordPattern, Converter={convert:Enum2Bool}, ConverterParameter={x:Static models:Pattern.Chinese}}" />
+                                    <RadioButton
+                                        Content="全部"
+                                        GroupName="WordPattern"
+                                        IsChecked="{Binding WordPattern, Converter={convert:Enum2Bool}, ConverterParameter={x:Static models:Pattern.Bilingual}}" />
+                                </UniformGrid>
+                            </DockPanel>
+                        </MenuItem.Header>
+                    </MenuItem>
+                </MenuItem>
+
+                <MenuItem Command="{Binding MViewModel.TCommand.Test1}" Header="测试" />
+                <MenuItem Header="工具" IsEnabled="False">
+                    <MenuItem Header="打印" />
+                </MenuItem>
+
+                <MenuItem Header="设置" IsEnabled="False" />
+                <MenuItem Header="帮助" IsEnabled="False" />
             </Menu>
 
         </Grid>
@@ -91,24 +303,34 @@
             DockPanel.Dock="Bottom">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" DataContext="{Binding SViewModel}" />
             </Grid.RowDefinitions>
 
             <!--  面板  -->
-            <view:GridView
+            <Grid
                 x:Name="panel"
                 Grid.Row="0"
                 Margin="5"
-                viewsAttach:CellViewAttach.CellFontSize="16"
-                viewsAttach:CellViewAttach.CellStretch="None" />
+                DataContext="{Binding GViewModel}">
+                <view:GridView
+                    viewsAttach:CellViewAttach.CellFontSize="{Binding CellSize}"
+                    viewsAttach:CellViewAttach.CellStretch="{Binding CellStretch}"
+                    viewsAttach:GridViewAttach.GridColumns="{Binding Columns}"
+                    viewsAttach:GridViewAttach.GridRows="{Binding Rows}" />
+            </Grid>
+
 
             <!--  信息栏  -->
-            <Label
+            <Grid
                 Grid.Row="1"
                 Height="26"
-                attach:LabelAttach.QuickRemove="True"
-                Background="#eeeef2"
-                Content="{Binding ShellLog}" />
+                DataContext="{Binding SViewModel}">
+                <Label
+                    attach:LabelAttach.QuickRemove="True"
+                    Background="#eeeef2"
+                    Content="{Binding ShellLog}" />
+            </Grid>
+
         </Grid>
     </DockPanel>
 </Window>

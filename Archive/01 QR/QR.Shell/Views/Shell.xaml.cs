@@ -25,6 +25,8 @@ namespace QR.Shell
             InitializeComponent();
             //ShellViewModel vm = new();
             //this.window.DataContext = vm;
+
+            
         }
     }
 }

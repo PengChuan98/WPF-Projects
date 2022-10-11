@@ -10,4 +10,15 @@
         BasedOn="{StaticResource MenuItemBase}"
         TargetType="MenuItem" />
 
+
+    <Style
+        x:Key="MenuItemBlank"
+        BasedOn="{StaticResource BlankMenuItemBase}"
+        TargetType="MenuItem" />
+
+    <Style
+        x:Key="MenuItemPure"
+        BasedOn="{StaticResource PureMenuItemBase}"
+        TargetType="MenuItem" />
+
 </ResourceDictionary>

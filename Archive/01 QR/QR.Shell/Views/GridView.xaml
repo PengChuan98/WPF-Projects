@@ -11,7 +11,10 @@
     <ItemsControl ItemsSource="{Binding ItemCollection}">
         <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
-                <UniformGrid Columns="10" Rows="10" />
+                <UniformGrid
+                    x:Name="grid"
+                    Columns="{Binding RelativeSource={RelativeSource AncestorType=local:GridView}, Path=(viewsAttach:GridViewAttach.GridColumns)}"
+                    Rows="{Binding RelativeSource={RelativeSource AncestorType=local:GridView}, Path=(viewsAttach:GridViewAttach.GridRows)}" />
             </ItemsPanelTemplate>
         </ItemsControl.ItemsPanel>
         <ItemsControl.ItemTemplate>

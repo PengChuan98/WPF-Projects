@@ -15,4 +15,6 @@ public static class ValueBox
     // grid
     public readonly static int RowsValue = 3;
     public readonly static int ColumnsValue = 6;
+
+    // Slider
 }

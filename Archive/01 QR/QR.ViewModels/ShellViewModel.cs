@@ -8,109 +8,237 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Toolkits.Helpers;
+using QR.ViewModels.Commands;
 
 namespace QR.ViewModels;
 
 public class ShellViewModel : ObservableObject
 {
-    string LastPath = QR.Core.Helper.ValueHelper.EmptyString;
 
-    List<MetaWord> MetaWordCollection = new();
+    #region 单词设置字段
+    // 单词配置文件（所有的Panel模式都能用）
+    WordProperty WProperty = new();
 
-    public List<CellViewModel>? CellViewModelCollection { get; set; }
-
-    #region 通知属性
-    private string _log = "";
-    public string ShellLog
+    public Order WordOrder
     {
-        get => _log;
-        set => SetProperty(ref _log, value);
+        get => WProperty.Order;
+        set => SetProperty(ref WProperty.Order, value);
     }
 
-    private List<CellViewModel> _itemCollection = new();
+    public Voice WordVoice
+    {
+        get => WProperty.Voice;
+        set => SetProperty(ref WProperty.Voice, value);
+    }
+    public Source WordSource
+    {
+        get => WProperty.Source;
+        set => SetProperty(ref WProperty.Source, value);
+    }
+    public Pattern WordPattern
+    {
+        get => WProperty.Pattern;
+        set => SetProperty(ref WProperty.Pattern, value);
+    }
 
     /// <summary>
-    /// 显示用的视图模型集合
+    /// 还原初始状态
     /// </summary>
-    public List<CellViewModel> ItemCollection
+    public void ResetWordProperty()
     {
-        get => _itemCollection;
-        set => SetProperty(ref _itemCollection, value);
+        WordOrder = ValueBox.WordOrder;
+        WordVoice = ValueBox.WordVoice;
+        WordSource = ValueBox.WordSource;
+        WordPattern = ValueBox.WordPattern;
     }
 
+    #endregion
+
+    #region 全局设置字段
+    #endregion
+
+    #region ViewModels
+    // TODO 多种模式的面板数据对象
+    public GridViewModel GViewModel { get; set; } = new();
+
+    // 状态栏
+    public StatusViewModel SViewModel { get; set; } = new();
+
+    // 菜单栏
+    public MenuViewModel MViewModel { get; set; } = new();
+    #endregion
+
+    #region 全局核心字段
+    // 最后一次记录的文件地址
+    string LastPath = String.Empty;
+
+    // 当前打开文件的内容集合
+    List<MetaWord> Words = new();
+
+    // 待操作视图模型集合
+    public List<CellViewModel> CellViewModelCollection { get; set; } = new();
+    #endregion
+
+    #region 临时核心字段
+
+    #endregion
+
+    #region TODO 待实现功能（面板）
+    //private object _panelviewmodel = new();
+    //public object PanelViewModel
+    //{
+    //    get => _panelviewmodel;
+    //    set => SetProperty(ref _panelviewmodel, value);
+    //}
     #endregion
 
     #region 消息方法
-    public void OpenFileWithDialog(object s, string e)
-    {
-        if (e.ToLower() == "csv") Handles.FileHandle.ReadCSVFileWithDialog(out LastPath, out MetaWordCollection);
-        else if (e.ToLower() == "words") Handles.FileHandle.ReadWordsFileWithDialog(out LastPath, out MetaWordCollection);
-        else MessengerHelper.SendString("类型参数错误，当前参数类型为：" + e, MessengerHelper.TErrorLog);
-
-    }
-
-    public void SaveFileWithDialog(object obj,string e)
-    {
-        if (e.ToLower() == "csv") Handles.FileHandle.SaveCSVFileWithDialog(MetaWordCollection,out LastPath);
-        else if (e.ToLower() == "words") Handles.FileHandle.SaveWordsFileWithDialog(MetaWordCollection, out LastPath);
-        else MessengerHelper.SendString("类型参数错误，当前参数类型为：" + e, MessengerHelper.TErrorLog);
-    }
-    #endregion
-
     /// <summary>
-    /// 注册消息服务
+    /// 注册消息初始化
     /// </summary>
     public void MessengerInitialized()
     {
-        // 全局日志
-        MessengerHelper.RegisterString(this, MessengerHelper.TInfoLog, (s, e) => { ShellLog = e; });
-
-        MessengerHelper.RegisterString(this, MessengerHelper.TWarnLog, (s, e) => { ShellLog = e; });
-
-        MessengerHelper.RegisterString(this, MessengerHelper.TErrorLog, (s, e) => { ShellLog = e; });
-
-
         // 文件
         MessengerHelper.RegisterString(this, MessengerHelper.TOpenFileDialog, OpenFileWithDialog);
         MessengerHelper.RegisterString(this, MessengerHelper.TSaveFileDialog, SaveFileWithDialog);
 
-        // 测试
-        MessengerHelper.RegisterString(this, MessengerHelper.TTestCommand, Test);
-    }
+        // 打开文件之后
+        MessengerHelper.RegisterString(this, MessengerHelper.TLoadWordsSuccess, OpenFileWithDialogSuccess);
 
-    private int index = 1;
-    private void Test(object recipient, string message)
-    {
-        var property = new WordProperty();
-        CellViewModelCollection = new();
-        MetaWordCollection.ForEach(
-            item => { CellViewModelCollection.Add(new(item, property)); }
-            );
-
-        var items = ListHelper<CellViewModel>.Split(CellViewModelCollection, 10 * 10, index);
-
-        items.Sort((x, y) =>
-        {
-            string src = x.Meta.Word.ToLower();
-            string dst = y.Meta.Word.ToLower();
-            return src.CompareTo(dst);
-        });
-
-
-        ItemCollection = items;
+        // GridView
+        MessengerHelper.RegisterString(this, MessengerHelper.TGridSizeChanged, OnGridSizeChanged);
     }
 
     /// <summary>
-    /// 命令初始化
+    /// Grid面板的Columns和Rows值改变的时候
+    /// 因为这两个值的更改一定伴随着Group和MaxGroup的重新定义问题，所以这里只需要计算Group和MaxGroup
+    /// 然后数据视图的刷新放到Group和MaxGroup中
     /// </summary>
-    public void CommandInitialized()
+    /// <param name="recipient"></param>
+    /// <param name="message"></param>
+    /// <exception cref="NotImplementedException"></exception>
+    private void OnGridSizeChanged(object recipient, string message)
     {
+        try
+        {
+            // 计算
+            GViewModel.MaxGroup = (int)Math.Ceiling(Words.Count / (double)(GViewModel.Rows * GViewModel.Columns));
 
+            // 获取显示数据
+            var temp = ListHelper<CellViewModel>.Split(CellViewModelCollection, GViewModel.Columns * GViewModel.Rows, GViewModel.Group);
+            SortItems(temp, WProperty.Order);
+
+            // 赋值
+            GViewModel.ItemCollection = temp;
+        }
+        catch (Exception e)
+        {
+            MessengerHelper.SendString(e.Message, MessengerHelper.TErrorLog);
+        }
     }
 
+    /// <summary>
+    /// 打开文件
+    /// </summary>
+    /// <param name="s"></param>
+    /// <param name="e"></param>
+    public void OpenFileWithDialog(object s, string e)
+    {
+        if (e.ToLower() == "csv") Handles.FileHandle.ReadCSVFileWithDialog(out LastPath, out Words);
+        else if (e.ToLower() == "words") Handles.FileHandle.ReadWordsFileWithDialog(out LastPath, out Words);
+        else MessengerHelper.SendString("类型参数错误，当前参数类型为：" + e, MessengerHelper.TErrorLog);
+    }
+
+    /// <summary>
+    /// 打开文件加载数据之后初始化然后渲染界面
+    /// </summary>
+    /// <param name="recipient"></param>
+    /// <param name="message"></param>
+    private void OpenFileWithDialogSuccess(object recipient, string message)
+    {
+        try
+        {
+            // 全局初始化
+            CellViewModelCollection = new();
+            ResetWordProperty();
+
+            // 填充原始数据和临时数据
+            Words.ForEach(item => { CellViewModelCollection.Add(new(item, WProperty)); });
+
+            // 初始化配置文件
+            ValueBox.ResetGridViewModel(GViewModel);
+
+            // 计算
+            GViewModel.MaxGroup = (int)Math.Ceiling(Words.Count / (double)(GViewModel.Rows * GViewModel.Columns));
+
+            // 获取显示数据
+            var temp = ListHelper<CellViewModel>.Split(CellViewModelCollection, GViewModel.Columns * GViewModel.Rows, GViewModel.Group);
+            SortItems(temp, WProperty.Order);
+
+            // 赋值
+            GViewModel.ItemCollection = temp;
+        }
+        catch (Exception e)
+        {
+            MessengerHelper.SendString(e.Message, MessengerHelper.TErrorLog);
+        }
+    }
+
+
+
+    /// <summary>
+    /// 关闭文件
+    /// </summary>
+    /// <param name="obj"></param>
+    /// <param name="e"></param>
+    public void SaveFileWithDialog(object obj, string e)
+    {
+        if (e.ToLower() == "csv") Handles.FileHandle.SaveCSVFileWithDialog(Words, out LastPath);
+        else if (e.ToLower() == "words") Handles.FileHandle.SaveWordsFileWithDialog(Words, out LastPath);
+        else MessengerHelper.SendString("类型参数错误，当前参数类型为：" + e, MessengerHelper.TErrorLog);
+    }
+    #endregion
+
+
+    /// <summary>
+    /// 通过WordProperty的Order来排序
+    /// </summary>
+    /// <param name="items"></param>
+    /// <param name="order"></param>
+    private void SortItems(List<CellViewModel> items, Order order)
+    {
+        switch (order)
+        {
+            case Order.None:
+                break;
+            case Order.Sequence:
+                items.Sort((x, y) =>
+                {
+                    string src = x.Meta.Word.ToLower();
+                    string dst = y.Meta.Word.ToLower();
+                    return src.CompareTo(dst);
+                });
+                break;
+            case Order.Reserve:
+                items.Sort((x, y) =>
+                {
+                    string src = x.Meta.Word.ToLower();
+                    string dst = y.Meta.Word.ToLower();
+                    return dst.CompareTo(src);
+                });
+                break;
+            case Order.Random:
+                ListHelper<CellViewModel>.Random(items);
+                break;
+            default:
+                break;
+        }
+    }
 
     public ShellViewModel()
     {
         MessengerInitialized();
+
+        //PanelViewModel = GViewModel;
     }
 }
