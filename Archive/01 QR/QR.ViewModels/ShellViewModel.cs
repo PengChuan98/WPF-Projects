@@ -121,6 +121,14 @@ public class ShellViewModel : ObservableObject
         // GridView
         MessengerHelper.RegisterString(this, MessengerHelper.TGridSizeChanged, OnGridSizeChanged);
         MessengerHelper.RegisterString(this, MessengerHelper.TGridGroupChanged, OnGridGroupChanged);
+
+        // 功能测试
+        MessengerHelper.RegisterString(this, MessengerHelper.TTestCommand, RunTest);
+    }
+
+    private void RunTest(object recipient, string message)
+    {
+        System.Windows.MessageBox.Show("test");
     }
 
     /// <summary>
