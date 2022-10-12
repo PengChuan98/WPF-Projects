@@ -55,6 +55,13 @@ public static class MessengerHelper
     }
 
     /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="msg"></param>
+    public static void SendErrorLog(string? msg)
+        => SendString(msg, TErrorLog);
+
+    /// <summary>
     /// 发送空字符，达到触发的目的
     /// </summary>
     /// <param name="token"></param>

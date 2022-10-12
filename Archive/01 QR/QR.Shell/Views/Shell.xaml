@@ -47,8 +47,7 @@
                 attach:WindowAttach.IsDragElement="True"
                 Content="{Binding ElementName=window, Path=Title}"
                 FontSize="14"
-                FontWeight="Bold"
-                Foreground="{DynamicResource WindowTitleColor}" />
+                FontWeight="Bold" />
 
 
             <Menu x:Name="menu" Background="Red">
@@ -324,8 +323,6 @@
                         <MenuItem.Header>
                             <DockPanel>
                                 <Label
-                                    Margin="{StaticResource PropertyItemLabelMargin}"
-                                    Padding="{StaticResource PropertyItemLabelPadding}"
                                     Content="方格数"
                                     DockPanel.Dock="Left"
                                     Style="{StaticResource LabelInfo}" />
@@ -455,6 +452,7 @@
                 Margin="10,5"
                 Padding="0"
                 attach:TagElement.Tag="全屏"
+                Command="{Binding MenuVM.FCommand}"
                 FontSize="8"
                 Style="{StaticResource ToggleLabelButtonDefault}" />
 

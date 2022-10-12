@@ -66,9 +66,6 @@ public class ShellViewModel : ObservableObject
 
     #endregion
 
-    #region 全局设置字段
-    #endregion
-
     #region ViewModels
     // TODO 多种模式的面板数据对象
     public GridViewModel GridVM { get; set; } = new();
